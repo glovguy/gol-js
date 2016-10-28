@@ -45,13 +45,22 @@ function countNeighbors(atX, atY) {
             count += 1;
         }
     }
-    console.log(count);
     return count;
 }
 
-function liveOrDie(currentMortalStatus, neighbors) {
+function isPixelAlive(atX, atY) {
+    var numPixels = pixels.length;
+    for (var p = 0; p < numPixels; p++) {
+        if (pixels[p].x == atX && pixels[p].y == atY && pixels[p][then] == "black") {
+            return true;
+        }
+    }
+    return false;
+}
+
+function gameRules(pixelLife, neighbors) {
     var aliveOrDead = "live";
-    if (currentMortalStatus == "alive") {
+    if (pixelLife == true) {
         if (neighbors < 2) {
             aliveOrDead = "die";
         } else if (neighbors > 3) {
@@ -59,7 +68,7 @@ function liveOrDie(currentMortalStatus, neighbors) {
         } else {
             aliveOrDead = "live";
         }
-    } else if (currentMortalStatus == "dead") {
+    } else if (pixelLife == false) {
         if (neighbors == 3) {
             aliveOrDead = "live";
         } else {
@@ -69,21 +78,12 @@ function liveOrDie(currentMortalStatus, neighbors) {
     return aliveOrDead;
 }
 
-function gameRules() {
+function cleanupDeadPixelsFromArray() {
     var numPixels = pixels.length;
     for (var p = 0; p < numPixels; p++) {
-        var neighbors = countNeighbors(pixels[p].x, pixels[p].y);
-        
-        var currentMortalStatus = "dead";
-        if (pixels[p][then] == "black") {
-            currentMortalStatus = "alive";
-        }
-        var live = liveOrDie(currentMortalStatus, neighbors);
-        
-        if (live == "live") {
-            pixels[p][now] = "black";
-        } else {
-            pixels[p][now] = "white";
+        if (pixels[p][then] == pixels[p][now] == "white") {
+            pixels.splice(p, 1);
+            p = p - 1;
         }
     }
 }
@@ -92,8 +92,40 @@ function updatePixelsDict() {
     var _then = now;
     now = then;
     then = _then;
+    var numPixels = pixels.length;
+    for (var p = 0; p < numPixels; p++) {
 
-    gameRules();
+        for (var px = -1; px < 2; px++) {
+            for (var py = -1; py < 2; py++) {
+
+                var offset = true;
+                if (px == py == 0) {
+                    offset = false;
+                }
+                iX = pixels[p].x + px;
+                iY = pixels[p].y + py;
+
+                var neighbors = countNeighbors(iX, iY);
+                var pixelLife = isPixelAlive(iX, iY);
+
+                var liveOrDie = gameRules(pixelLife, neighbors);
+    
+                if (liveOrDie == "live" && offset == false) {
+                    pixels[p][now] = "black";
+                } else if (liveOrDie == "die" && offset == false) {
+                    pixels[p][now] = "white";
+                } else if (offset == true && liveOrDie == "live" && pixelLife == false) {
+                    var newPixel = {x: iX, y: iY};
+                    newPixel[then] = "white";
+                    newPixel[now] = "black";
+                    pixels.push(newPixel);
+                }
+            }
+        }
+
+    }
+
+    cleanupDeadPixelsFromArray();
     
 }
 
