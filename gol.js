@@ -55,7 +55,7 @@ function isPixelAlive(atX, atY) {
 
 function gameRules(pixelLife, neighbors) {
     var aliveOrDead = "live";
-    if (pixelLife == true) {
+    if (pixelLife === true) {
         if (neighbors < 2) {
             aliveOrDead = "die";
         } else if (neighbors > 3) {
@@ -63,7 +63,7 @@ function gameRules(pixelLife, neighbors) {
         } else {
             aliveOrDead = "live";
         }
-    } else if (pixelLife == false) {
+    } else if (pixelLife === false) {
         if (neighbors == 3) {
             aliveOrDead = "live";
         } else {
@@ -94,7 +94,7 @@ function updatePixelsDict() {
             for (var py = -1; py < 2; py++) {
 
                 var offset = true;
-                if (px == py == 0) {
+                if (px == py === 0) {
                     offset = false;
                 }
                 iX = pixels[p].x + px;
@@ -105,11 +105,11 @@ function updatePixelsDict() {
 
                 var liveOrDie = gameRules(pixelLife, neighbors);
     
-                if (liveOrDie == "live" && offset == false) {
+                if (liveOrDie == "live" && offset === false) {
                     pixels[p][now] = "black";
-                } else if (liveOrDie == "die" && offset == false) {
+                } else if (liveOrDie == "die" && offset === false) {
                     pixels[p][now] = "white";
-                } else if (offset == true && liveOrDie == "live" && pixelLife == false) {
+                } else if (offset === true && liveOrDie == "live" && pixelLife === false) {
                     var newPixel = {x: iX, y: iY};
                     newPixel[then] = "white";
                     newPixel[now] = "black";
