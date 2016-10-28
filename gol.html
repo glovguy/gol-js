@@ -76,14 +76,14 @@ function gameRules() {
         
         var currentMortalStatus = "dead";
         if (pixels[p][then] == "black") {
-            currentMortalStatus == "alive";
+            currentMortalStatus = "alive";
         }
         var live = liveOrDie(currentMortalStatus, neighbors);
         
         if (live == "live") {
-            pixels[p][now] == "black";
+            pixels[p][now] = "black";
         } else {
-            pixels[p][now] == "white";
+            pixels[p][now] = "white";
         }
     }
 }
