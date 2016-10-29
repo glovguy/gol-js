@@ -24,6 +24,11 @@
     var p5 = {x: 14, y: 11, s1: "black", s2: "white"};
     pixels.addPixel(p5);
 
+    function cycleOfLife() {
+        updateCanvas(pixels);
+        pixels.updatePixelsDict();
+    }
+
     var varOn = setInterval(cycleOfLife, 1110);
 </script>
 

@@ -4,14 +4,14 @@ function Pixels() {
     this.then = "s2";
 }
 
-function updateCanvas() {
+function updateCanvas(pixels) {
 
     var numPixels = pixels.length;
-    for (var p = 0; p < numPixels; p++) {
-        ctx.fillStyle = pixels[p][now];
+    for (var p = 0; p < pixels.numPixels(); p++) {
+        ctx.fillStyle = pixels.pixelList[p][pixels.now];
         ctx.fillRect(
-            pixels[p].x * pSize,
-            pixels[p].y * pSize,
+            pixels.pixelList[p].x * pSize,
+            pixels.pixelList[p].y * pSize,
             pSize,
             pSize);
     }
@@ -26,9 +26,9 @@ Pixels.prototype.addPixel = function(pixel) {
     this.pixelList.push(pixel);
 };
 
-Pixels.prototype.isPixelAlive = function(atX, atY) {
+Pixels.prototype.isPixelAlive = function(atX, atY, time) {
     for (var p = 0; p < this.numPixels(); p++) {
-        if (this.pixelList[p].x == atX && this.pixelList[p].y == atY && this.pixelList[p][this.then] == "black") {
+        if (this.pixelList[p].x == atX && this.pixelList[p].y == atY && this.pixelList[p][time] == "black") {
             return true;
         }
     }
@@ -39,7 +39,7 @@ Pixels.prototype.countNeighbors = function(atX, atY) {
     var count = 0;
     for (var px = -1; px < 2; px++) {
         for (var py = -1; py < 2; py++) {
-            if (this.isPixelAlive(atX+px, atY+py) && (px !== 0 || py !== 0)) {
+            if (this.isPixelAlive(atX+px, atY+py, this.then) && (px !== 0 || py !== 0)) {
                 count += 1;
             }
         }
@@ -80,28 +80,26 @@ Pixels.prototype.updatePixelsDict = function() {
     var _then = this.now;
     this.now = this.then;
     this.then = _then;
-    for (var p = 0; p < this.numPixels; p++) {
-        this.pixelList[p][this.now] = "white";
+    for (var p = 0; p < this.numPixels(); p++) {
 
         for (var px = -1; px < 2; px++) {
             for (var py = -1; py < 2; py++) {
 
                 var offset = true;
-                if (px == py === 0) {
+                if (px == py && py === 0) {
                     offset = false;
                 }
                 iX = this.pixelList[p].x + px;
                 iY = this.pixelList[p].y + py;
 
                 var neighbors = this.countNeighbors(iX, iY);
-                var pixelLife = this.isPixelAlive(iX, iY);
-
+                var pixelLife = this.isPixelAlive(iX, iY, this.then);
                 var liveOrDie = gameRules(pixelLife, neighbors);
     
                 if (liveOrDie == "live" && offset === false) {
-                    this.pixelList[p][now] = "black";
+                    this.pixelList[p][this.now] = "black";
                 } else if (liveOrDie == "die" && offset === false) {
-                    this.pixelList[p][now] = "white";
+                    this.pixelList[p][this.now] = "white";
                 } else if (offset === true && liveOrDie == "live" && pixelLife === false) {
                     var newPixel = {x: iX, y: iY};
                     newPixel[this.then] = "white";
@@ -116,10 +114,5 @@ Pixels.prototype.updatePixelsDict = function() {
     this.cleanupDeadPixelsFromArray();
     
 };
-
-function cycleOfLife() {
-    updateCanvas();
-    updatePixelsDict();
-}
 
 module.exports = Pixels;

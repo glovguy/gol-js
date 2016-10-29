@@ -20,11 +20,11 @@ describe("Player", function() {
   it("should be able to add pixels and recognize when a pixel is alive", function() {
     var p1 = {x: 14, y: 11, s1: "black", s2: "black"};
     pixels.addPixel(p1);
-    expect(pixels.isPixelAlive(14, 11)).toEqual(true);
-    expect(pixels.isPixelAlive(11, 14)).toEqual(false);
+    expect(pixels.isPixelAlive(14, 11, pixels.then)).toEqual(true);
+    expect(pixels.isPixelAlive(11, 14, pixels.then)).toEqual(false);
     var p2 = {x: 12, y: 12, s1: "white", s2: "white"};
     pixels.addPixel(p2);
-    expect(pixels.isPixelAlive(12, 12)).toEqual(false);
+    expect(pixels.isPixelAlive(12, 12, pixels.then)).toEqual(false);
   });
 
   it("should be able to count neighbors for a pixel", function() {
@@ -51,7 +51,7 @@ describe("Player", function() {
   });
 
   it("should update pixels in a glider correctly", function() {
-    var p1 = {x: 11, y: 12, s1: "white", s2: "white"};
+    var p1 = {x: 11, y: 12, s1: "black", s2: "black"};
     var p2 = {x: 13, y: 11, s1: "black", s2: "black"};
     var p3 = {x: 13, y: 12, s1: "black", s2: "black"};
     var p4 = {x: 13, y: 13, s1: "black", s2: "black"};
@@ -62,9 +62,18 @@ describe("Player", function() {
     pixels.addPixel(p4);
     pixels.addPixel(p5);
     pixels.updatePixelsDict();
-    console.log(pixels.countNeighbors(13, 13));
-    console.log(pixels);
-    expect(pixels.numPixels()).toEqual(5);
+    expect(pixels.isPixelAlive(12, 11, pixels.now)).toEqual(true);
+    expect(pixels.isPixelAlive(13, 11, pixels.now)).toEqual(false);
+    expect(pixels.isPixelAlive(11, 12, pixels.now)).toEqual(false);
+    expect(pixels.isPixelAlive(12, 12, pixels.now)).toEqual(false);
+    expect(pixels.isPixelAlive(13, 12, pixels.now)).toEqual(true);
+    expect(pixels.isPixelAlive(14, 12, pixels.now)).toEqual(true);
+    expect(pixels.isPixelAlive(11, 13, pixels.now)).toEqual(false);
+    expect(pixels.isPixelAlive(12, 13, pixels.now)).toEqual(true);
+    expect(pixels.isPixelAlive(13, 13, pixels.now)).toEqual(true);
+    expect(pixels.isPixelAlive(14, 13, pixels.now)).toEqual(false);
+
+    // expect(pixels.numPixels()).toEqual(5);
   });
 
 //   describe("when song has been paused", function() {
