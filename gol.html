@@ -6,6 +6,29 @@
 
 <script src="gol.js"></script>
 
+<script>
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    var pSize = 5;
+    pixels = new Pixels();
+
+    //  Seed data
+    var p1 = {x: 13, y: 12, s1: "black", s2: "white"};
+    pixels.addPixel(p1);
+    var p2 = {x: 13, y: 13, s1: "black", s2: "white"};
+    pixels.addPixel(p2);
+    var p3 = {x: 12, y: 12, s1: "black", s2: "white"};
+    pixels.addPixel(p3);
+    var p4 = {x: 13, y: 11, s1: "black", s2: "white"};
+    pixels.addPixel(p4);
+    var p5 = {x: 14, y: 11, s1: "black", s2: "white"};
+    pixels.addPixel(p5);
+
+    var varOn = setInterval(cycleOfLife, 1110);
+</script>
+
+
+
 </body>
 </html>
 

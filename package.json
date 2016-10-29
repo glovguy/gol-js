@@ -1,0 +1,9 @@
+{
+  "name": "gol-js",
+  "version": "1.0.0",
+  "description": "A javascript implementation of Conway's Game of Life",
+  "main": "gol.js",
+  "devDependencies": {
+    "jasmine": "^2.5.2"
+  }
+}
