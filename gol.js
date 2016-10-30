@@ -100,7 +100,7 @@ Pixels.prototype.updatePixelsDict = function() {
                     this.pixelList[p][this.now] = "black";
                 } else if (liveOrDie == "die" && offset === false) {
                     this.pixelList[p][this.now] = "white";
-                } else if (offset === true && liveOrDie == "live" && pixelLife === false) {
+                } else if (offset === true && liveOrDie == "live" && this.isPixelAlive(iX, iY, this.now) === false) {
                     var newPixel = {x: iX, y: iY};
                     newPixel[this.then] = "white";
                     newPixel[this.now] = "black";
