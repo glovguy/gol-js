@@ -2,26 +2,85 @@
 <html>
 <body>
 
-<canvas id="myCanvas" width="400" height="200" style="border:1px solid #000000; position: absolute; left: 50%; margin-right: -50%; transform: translate(-50%, 50%)">Your browser is not supported.</canvas>
+<div id="containerDiv">
+<canvas id="myCanvas"  width="1000" height="500" style="border:1px solid #000000; position: absolute; left: 50%; transform: translate(-50%, 10%)">Your browser is not supported.</canvas>
 
 <script src="gol.js"></script>
 <script src="templates.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script>
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     var pSize = 5;
     pixels = new Pixels();
+    var play = false;
+    var interv;
 
     function cycleOfLife() {
         updateCanvas(pixels);
         pixels.updatePixelsDict();
     }
 
-    var varOn = setInterval(cycleOfLife, 100);
+    function playpause() {
+        if (play === false) {
+            interv = setInterval(function(){ cycleOfLife() }, 100);
+            play = true;
+            $('#playpausebutton').html('Pause');
+        } else {
+            clearInterval(interv);
+            play = false;
+            $('#playpausebutton').html('Play');
+        }
+    }
+
+    $(function() {
+        var container = $('#containerDiv');
+        var canvas = $('#myCanvas');
+
+        var width = container.width()*0.8;
+        var height = container.width()*0.4;
+
+        canvas.css('width', width);
+        canvas.css('height', height);
+    });
+
+    function updateCanvas(pixels) {
+        for (var p = 0; p < pixels.numPixels(); p++) {
+            ctx.fillStyle = pixels.pixelList[p][pixels.now];
+            ctx.fillRect(
+                pixels.pixelList[p].x * pSize,
+                pixels.pixelList[p].y * pSize,
+                pSize,
+                pSize);
+        }
+    }
+
+    function clearCanvas(pixels) {
+        pixels.clearPixels();
+        updateCanvas(pixels);
+        var height = 0;
+        var width = 0;
+        $(function() {
+            var canvas = $('#myCanvas');
+            width = canvas.width();
+            height = canvas.height();
+        });
+        ctx.fillStyle = "white";
+        ctx.fillRect(
+            0,
+            0,
+            width,
+            height);
+    };
+
 </script>
 
-<button onclick="glider(pixels)">Glider</button>
+<button onclick="glider(pixels);updateCanvas(pixels);">Glider</button>
+<button onclick="fPentamino(pixels);updateCanvas(pixels);">F-Pentamino</button>
+<button onclick="clearCanvas(pixels);">Clear</button>
+<button id="playpausebutton" onclick="playpause();updateCanvas(pixels);">Play</button>
+</div>
 
 </body>
 </html>

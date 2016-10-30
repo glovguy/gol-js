@@ -4,20 +4,6 @@ function Pixels() {
     this.then = "s2";
 }
 
-function updateCanvas(pixels) {
-
-    var numPixels = pixels.length;
-    for (var p = 0; p < pixels.numPixels(); p++) {
-        ctx.fillStyle = pixels.pixelList[p][pixels.now];
-        ctx.fillRect(
-            pixels.pixelList[p].x * pSize,
-            pixels.pixelList[p].y * pSize,
-            pSize,
-            pSize);
-    }
-
-}
-
 Pixels.prototype.numPixels = function() {
     return this.pixelList.length;
 };
@@ -73,6 +59,13 @@ Pixels.prototype.cleanupDeadPixelsFromArray = function() {
             this.pixelList.splice(p, 1);
             p = p - 1;
         }
+    }
+};
+
+Pixels.prototype.clearPixels = function() {
+    for (var p = 0; p < this.numPixels(); p++) {
+        this.pixelList[p][this.now] = "white";
+        this.pixelList[p][this.then] = "white";
     }
 };
 
