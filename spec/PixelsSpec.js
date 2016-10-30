@@ -72,8 +72,31 @@ describe("Player", function() {
     expect(pixels.isPixelAlive(12, 13, pixels.now)).toEqual(true);
     expect(pixels.isPixelAlive(13, 13, pixels.now)).toEqual(true);
     expect(pixels.isPixelAlive(14, 13, pixels.now)).toEqual(false);
+  });
 
-    // expect(pixels.numPixels()).toEqual(5);
+  it("should not memory leak when adding pixels", function() {
+    // glider pattern should be stable over time
+    var p1 = {x: 11, y: 12, s1: "black", s2: "black"};
+    var p2 = {x: 13, y: 11, s1: "black", s2: "black"};
+    var p3 = {x: 13, y: 12, s1: "black", s2: "black"};
+    var p4 = {x: 13, y: 13, s1: "black", s2: "black"};
+    var p5 = {x: 12, y: 13, s1: "black", s2: "black"};
+    pixels.addPixel(p1);
+    pixels.addPixel(p2);
+    pixels.addPixel(p3);
+    pixels.addPixel(p4);
+    pixels.addPixel(p5);
+    pixels.updatePixelsDict();
+    pixels.updatePixelsDict();
+    pixels.updatePixelsDict();
+    pixels.updatePixelsDict();
+    pixels.updatePixelsDict();
+    pixels.updatePixelsDict();
+    pixels.updatePixelsDict();
+    pixels.updatePixelsDict();
+    pixels.updatePixelsDict();
+    pixels.updatePixelsDict();
+    expect(pixels.numPixels()).toBeLessThan(13);
   });
 
 //   describe("when song has been paused", function() {
