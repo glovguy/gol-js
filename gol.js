@@ -108,4 +108,6 @@ Pixels.prototype.updatePixelsDict = function() {
     
 };
 
-module.exports = Pixels;
+if (typeof module !== 'undefined' && module.exports) {
+            module.exports = Pixels;
+    } 
