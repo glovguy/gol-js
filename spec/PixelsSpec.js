@@ -86,57 +86,25 @@ describe("Player", function() {
     pixels.addPixel(p3);
     pixels.addPixel(p4);
     pixels.addPixel(p5);
-    pixels.updatePixelsDict();
-    pixels.updatePixelsDict();
-    pixels.updatePixelsDict();
-    pixels.updatePixelsDict();
-    pixels.updatePixelsDict();
-    pixels.updatePixelsDict();
-    pixels.updatePixelsDict();
-    pixels.updatePixelsDict();
-    pixels.updatePixelsDict();
-    pixels.updatePixelsDict();
+    for (var i = 0; i < 10; i++) {
+        pixels.updatePixelsDict();
+    }
+    expect(pixels.numPixels()).toBeLessThan(13);
+    for (var ii = 0; ii < 7; ii++) {
+        pixels.updatePixelsDict();
+    }
     expect(pixels.numPixels()).toBeLessThan(13);
   });
 
-//   describe("when song has been paused", function() {
-//     beforeEach(function() {
-//       player.play(song);
-//       player.pause();
-//     });
+  it("should recognize square statue", function() {
+    var statues = require('../statues.js');
+    var p1 = {x: 11, y: 12, s1: "black", s2: "black"};
+    var p2 = {x: 11, y: 11, s1: "black", s2: "black"};
+    var p3 = {x: 12, y: 11, s1: "black", s2: "black"};
+    var p4 = {x: 12, y: 12, s1: "black", s2: "black"};
+    pixels.recognizeStatues();
+    expect(pixels.statues().length).toEqual(1);
+    expect(pixels.statues()[0]).toEqual(new statues.Square());
+  });
 
-//     it("should indicate that the song is currently paused", function() {
-//       expect(player.isPlaying).toBeFalsy();
-
-//       // demonstrates use of 'not' with a custom matcher
-//       expect(player).not.toBePlaying(song);
-//     });
-
-//     it("should be possible to resume", function() {
-//       player.resume();
-//       expect(player.isPlaying).toBeTruthy();
-//       expect(player.currentlyPlayingSong).toEqual(song);
-//     });
-//   });
-
-//   // demonstrates use of spies to intercept and test method calls
-//   it("tells the current song if the user has made it a favorite", function() {
-//     spyOn(song, 'persistFavoriteStatus');
-
-//     player.play(song);
-//     player.makeFavorite();
-
-//     expect(song.persistFavoriteStatus).toHaveBeenCalledWith(true);
-//   });
-
-//   //demonstrates use of expected exceptions
-//   describe("#resume", function() {
-//     it("should throw an exception if song is already playing", function() {
-//       player.play(song);
-
-//       expect(function() {
-//         player.resume();
-//       }).toThrowError("song is already playing");
-//     });
-//   });
 });
