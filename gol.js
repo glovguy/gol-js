@@ -1,8 +1,24 @@
 function Pixels() {
     this.pixelList = [];
+    this.statues = [];
     this.now = "s1";
     this.then = "s2";
 }
+
+function Square() {
+    this.pattern = [
+            {x: 0, y: 1, s1: "black", s2: "black"},
+            {x: 0, y: 0, s1: "black", s2: "black"},
+            {x: 1, y: 0, s1: "black", s2: "black"},
+            {x: 1, y: 1, s1: "black", s2: "black"}
+        ];
+    this.footprint = [1,1];
+    this.x = 0;
+    this.y = 0;
+    this.numPixels = 4;
+}
+
+// var statues = require('./statues.js');
 
 Pixels.prototype.numPixels = function() {
     return this.pixelList.length;
@@ -69,6 +85,14 @@ Pixels.prototype.clearPixels = function() {
     }
 };
 
+Pixels.prototype.killPixel = function(atX, atY) {
+    for (var p = 0; p < this.numPixels(); p++) {
+        if (this.pixelList[p].x == atX && this.pixelList[p].y == atY) {
+            this.pixelList[p][this.now] = "white";
+        }
+    }
+};
+
 Pixels.prototype.updatePixelsDict = function() {
     var _then = this.now;
     this.now = this.then;
@@ -88,26 +112,47 @@ Pixels.prototype.updatePixelsDict = function() {
                 var neighbors = this.countNeighbors(iX, iY);
                 var pixelLife = this.isPixelAlive(iX, iY, this.then);
                 var liveOrDie = gameRules(pixelLife, neighbors);
-    
+
                 if (liveOrDie == "live" && offset === false) {
                     this.pixelList[p][this.now] = "black";
                 } else if (liveOrDie == "die" && offset === false) {
-                    this.pixelList[p][this.now] = "white";
+                    this.killPixel(iX, iY);
                 } else if (offset === true && liveOrDie == "live" && this.isPixelAlive(iX, iY, this.now) === false) {
                     var newPixel = {x: iX, y: iY};
                     newPixel[this.then] = "white";
                     newPixel[this.now] = "black";
                     this.addPixel(newPixel);
                 }
+                
             }
         }
 
     }
 
     this.cleanupDeadPixelsFromArray();
-    
+};
+
+Pixels.prototype.recognizeStatues = function() {
+    square = new Square();
+    for (var p = 0; p < this.numPixels(); p++) {
+        found = 0;
+        for (var pp = 0; pp < square.numPixels; pp++) {
+            
+            if (this.isPixelAlive(
+                this.pixelList[p].x + square.pattern[pp].x,
+                this.pixelList[p].y + square.pattern[pp].y,
+                this.now
+                ) === true)
+            {
+                found += 1;
+            }
+        }
+        if (found == square.numPixels) {
+            this.statues.push(square);
+        }
+    }
 };
 
 if (typeof module !== 'undefined' && module.exports) {
-            module.exports = Pixels;
-    } 
+    module.exports = Pixels;
+}
