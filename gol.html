@@ -16,24 +16,34 @@
     var pSize = 5;
     pixels = new Pixels();
     var play = false;
-    var interv;
 
     function cycleOfLife() {
-        updateCanvas(pixels);
         pixels.updatePixelsDict();
+        requestId = requestAnimFrame(cycleOfLife);
+        updateCanvas(pixels);
     }
 
     function playpause() {
         if (play === false) {
-            interv = setInterval(function(){ cycleOfLife() }, 100);
+            cycleOfLife();
             play = true;
             $('#playpausebutton').html('Pause');
         } else {
-            clearInterval(interv);
+            window.cancelAnimationFrame(requestId);
+            requestId = undefined;
             play = false;
             $('#playpausebutton').html('Play');
         }
     }
+
+    window.requestAnimFrame = (function(){
+        return  window.requestAnimationFrame    ||
+            window.webkitRequestAnimationFrame  ||
+            window.mozRequestAnimationFrame     ||
+            function( callback ){
+                window.setTimeout(callback, 100);
+            };
+    })();
 
     $(function() {
         var container = $('#containerDiv');
