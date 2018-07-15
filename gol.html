@@ -3,19 +3,31 @@
 <body>
 
 <div id="containerDiv">
-<canvas id="myCanvas"  width="1000" height="500" style="border:1px solid #000000; position: absolute; left: 50%; transform: translate(-50%, 10%)">Your browser is not supported.</canvas>
+    <canvas id="myCanvas"  width="1000" height="500" style="border:1px solid #000000; position: absolute; left: 50%; transform: translate(-50%, 10%)">Your browser is not supported.</canvas>
+    <button onclick="glider(pixels);updateCanvas(pixels);">Glider</button>
+    <button onclick="fPentamino(pixels);updateCanvas(pixels);">F-Pentamino</button>
+    <button onclick="clearCanvas(pixels);">Clear</button>
+    <button id="playpausebutton" onclick="playpause();updateCanvas(pixels);">Play</button>
+    <p><a href="https://github.com/glovguy/gol-js">Github</a></p>
+</div>
 
 <script src="gol.js"></script>
 <script src="templates.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="analytics.js"></script>
 
 <script>
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    var pSize = 5;
+    const playPauseButton = document.querySelector('#playpausebutton');
+    const container = document.querySelector('#containerDiv');
+    const canvas = document.querySelector('#myCanvas');
+    const width = container.offsetWidth * 0.8;
+    const height = container.offsetWidth * 0.4;
+    canvas.style['width'] = `${width}px`;
+    canvas.style['height'] = `${height}px`;
+
+    const ctx = canvas.getContext("2d");
+    let pSize = 5;
     pixels = new Pixels();
-    var play = false;
+    let play = false;
 
     function cycleOfLife() {
         pixels.updatePixelsDict();
@@ -27,12 +39,12 @@
         if (play === false) {
             cycleOfLife();
             play = true;
-            $('#playpausebutton').html('Pause');
+            playPauseButton.innerHTML = 'Pause';
         } else {
             window.cancelAnimationFrame(requestId);
             requestId = undefined;
             play = false;
-            $('#playpausebutton').html('Play');
+            playPauseButton.innerHTML = 'Play';
         }
     }
 
@@ -44,17 +56,6 @@
                 window.setTimeout(callback, 100);
             };
     })();
-
-    $(function() {
-        var container = $('#containerDiv');
-        var canvas = $('#myCanvas');
-
-        var width = container.width()*0.8;
-        var height = container.width()*0.4;
-
-        canvas.css('width', width);
-        canvas.css('height', height);
-    });
 
     function updateCanvas(pixels) {
         for (var p = 0; p < pixels.numPixels(); p++) {
@@ -70,13 +71,6 @@
     function clearCanvas(pixels) {
         pixels.clearPixels();
         updateCanvas(pixels);
-        var height = 0;
-        var width = 0;
-        $(function() {
-            var canvas = $('#myCanvas');
-            width = canvas.width();
-            height = canvas.height();
-        });
         ctx.fillStyle = "white";
         ctx.fillRect(
             0,
@@ -86,13 +80,6 @@
     };
 
 </script>
-
-<button onclick="glider(pixels);updateCanvas(pixels);">Glider</button>
-<button onclick="fPentamino(pixels);updateCanvas(pixels);">F-Pentamino</button>
-<button onclick="clearCanvas(pixels);">Clear</button>
-<button id="playpausebutton" onclick="playpause();updateCanvas(pixels);">Play</button>
-<p><a href="https://github.com/glovguy/gol-js">Github</a></p>
-</div>
 
 </body>
 </html>
