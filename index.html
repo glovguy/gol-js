@@ -17,12 +17,9 @@
 
 <script>
     const playPauseButton = document.querySelector('#playpausebutton');
-    const container = document.querySelector('#containerDiv');
+    const canvasContainer = document.querySelector('#containerDiv');
     const canvas = document.querySelector('#myCanvas');
-    const width = container.offsetWidth * 0.8;
-    const height = container.offsetWidth * 0.4;
-    canvas.style['width'] = `${width}px`;
-    canvas.style['height'] = `${height}px`;
+    resizeCanvas();
 
     const ctx = canvas.getContext("2d");
     let pSize = 5;
@@ -57,6 +54,13 @@
             };
     })();
 
+    function resizeCanvas() {
+        const width = canvasContainer.offsetWidth * 0.8;
+        const height = canvasContainer.offsetWidth * 0.4;
+        canvas.style['width'] = `${width}px`;
+        canvas.style['height'] = `${height}px`;
+    }
+
     function updateCanvas(pixels) {
         for (var p = 0; p < pixels.numPixels(); p++) {
             ctx.fillStyle = pixels.pixelList[p][pixels.now];
@@ -64,7 +68,8 @@
                 pixels.pixelList[p].x * pSize,
                 pixels.pixelList[p].y * pSize,
                 pSize,
-                pSize);
+                pSize
+            );
         }
     }
 
@@ -76,9 +81,11 @@
             0,
             0,
             width,
-            height);
-    };
+            height
+        );
+    }
 
+    window.addEventListener('resize', resizeCanvas);
 </script>
 
 </body>
